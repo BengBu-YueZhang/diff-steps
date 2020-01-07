@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import h from './createElement';
 import { diff } from './diff';
+import Tree from './components/Tree';
 
 const App: React.FC = () => {
 
@@ -35,10 +36,12 @@ const App: React.FC = () => {
     h('div', null, 'new')
   ])
 
-  const snapshot = diff(oldVNode, newVNode)
+  const snapshots = diff(oldVNode, newVNode)
+  const [ state, setState ] = useState(oldVNode)
 
   return (
     <div className="App">
+      <Tree data={state} />
     </div>
   );
 }

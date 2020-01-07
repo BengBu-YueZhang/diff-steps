@@ -11,9 +11,4 @@ import App from './App';
 // todo
 // 1. 添加动画效果 https://github.com/googlearchive/flipjs
 
-// type
-// change #2196f3
-// add #4baf50
-// delete #fe4081
-
 ReactDOM.render(<App />, document.getElementById('root'));
