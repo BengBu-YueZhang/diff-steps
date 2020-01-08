@@ -1,6 +1,6 @@
 export type VNodeType = string;
 
-export type VNodeChildren = VNode[] | string | null;
+export type VNodeChildren = VNode[];
 
 export type VNodeProps = Data;
 

@@ -30,16 +30,18 @@ const Tree: React.FC<ITree> = (params) => {
         </div>
         <div className="tree-node-props">
           {
-            keys && keys.map(key => (
-              <p>{ key }: { props[key] }</p>
+            keys && keys.map((key, index) => (
+              <p key={index}>{ key }: { props[key] }</p>
             ))
           }
-          { !isArray(children) && <p>innerHTML: {children}</p> }
         </div>
       </div>
       <div className="tree-node-children">
         {
-          isArray(children) && children.map(child => <Tree data={child}/>)
+          isArray(children) && children.map((child, index) => 
+            // TODO:
+            <Tree key={index} data={child}/>
+          )
         }
       </div>
     </div>
