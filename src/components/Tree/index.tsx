@@ -21,26 +21,29 @@ const Tree: React.FC<ITree> = (params) => {
   const keys = Object.keys(props!)
 
   return (
-    <div className="tree-node" style={{
-      backgroundColor: light
-    }}>
-      <div className="tree-node-type">{ type }</div>
-      <div className="tree-node-props">
+    <div>
+      <div className="tree-node" style={{
+        backgroundColor: light
+      }}>
+        <div className="tree-node-type">
+          <p>{ type }</p>
+        </div>
+        <div className="tree-node-props">
+          {
+            keys && keys.map(key => (
+              <p>{ key }: { props[key] }</p>
+            ))
+          }
+          { !isArray(children) && <p>innerHTML: {children}</p> }
+        </div>
+      </div>
+      <div className="tree-node-children">
         {
-          keys && keys.map(key => (
-            <p>{ key }: { props[key] }</p>
-          ))
+          isArray(children) && children.map(child => <Tree data={child}/>)
         }
       </div>
-      {/* <div>
-        {
-          !isArray(children) && children
-        }
-      </div> */}
-      {/* {
-        isArray(children) && children.map(child => <Tree data={child}/>)
-      } */}
     </div>
+    
   )
 }
 
