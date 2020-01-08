@@ -2,13 +2,13 @@ export type VNodeType = string;
 
 export type VNodeChildren = VNode[] | string | null;
 
-export type VNodeProps = Data | null;
+export type VNodeProps = Data;
 
 export enum LightType {
   ADD = '#4baf50',
   CHANGE = '#2196f3',
-  DELETE = '#fe4081',
-  DEFAULT = '#f5f5f5'
+  DELETE = '#f44335',
+  DEFAULT = '#fe4081'
 }
 
 export interface Data {

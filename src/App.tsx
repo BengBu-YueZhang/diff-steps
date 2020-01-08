@@ -9,31 +9,31 @@ const App: React.FC = () => {
   const oldVNode = h('div', {
     id: 'root'
   }, [
-    h('div', {
+    h('ul', {
       class: 'list'
     }, [
-      h('div', { key: 1 }, '01'),
-      h('div', { key: 2 }, '02'),
-      h('div', { key: 3 }, '03'),
-      h('div', { key: 4 }, '04'),
-      h('div', { key: 5 }, '05')
+      h('li', { key: 1 }, '01'),
+      h('li', { key: 2 }, '02'),
+      h('li', { key: 3 }, '03'),
+      h('li', { key: 4 }, '04'),
+      h('li', { key: 5 }, '05')
     ]),
-    h('div', null, 'old')
+    h('div', {}, 'old')
   ])
 
   const newVNode = h('div', {
     id: 'root'
   }, [
-    h('div', {
+    h('ul', {
       class: 'list'
     }, [
-      h('div', { key: 5 }, '05'),
-      h('div', { key: 2 }, '02'),
-      h('div', { key: 3 }, '03'),
-      h('div', { key: 4 }, '04'),
-      h('div', { key: 1 }, '01')
+      h('li', { key: 5 }, '05'),
+      h('li', { key: 2 }, '02'),
+      h('li', { key: 3 }, '03'),
+      h('li', { key: 4 }, '04'),
+      h('li', { key: 1 }, '01')
     ]),
-    h('div', null, 'new')
+    h('div', {}, 'new')
   ])
 
   const snapshots = diff(oldVNode, newVNode)
