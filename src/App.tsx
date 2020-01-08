@@ -3,6 +3,7 @@ import './App.css';
 import h from './createElement';
 import { diff } from './diff';
 import Tree from './components/Tree';
+import { simpleCloneDeepVNode } from './util';
 
 export const oldVNode = h('div', {
   id: 'root'
@@ -20,7 +21,7 @@ export const oldVNode = h('div', {
 ])
 
 const newVNode = h('div', {
-  id: 'root'
+  id: 'root2'
 }, [
   h('ul', {
     class: 'list'
@@ -36,13 +37,9 @@ const newVNode = h('div', {
 
 
 const App: React.FC = () => {
-
-  const [ vnode, setVNode ] = useState(oldVNode);
-
+  const [ vnode, setVNode ] = useState(simpleCloneDeepVNode(oldVNode));
   const snapshots = diff(newVNode, oldVNode);
-
   console.log(`snapshots:`, snapshots)
-
   return (
     <div className="App">
       <Tree data={vnode} />
