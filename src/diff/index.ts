@@ -28,6 +28,9 @@ const setProperty = (vnode: VNode, key: string, value: any, oldValue?: any) => {
   }
 }
 
+const toChildArray = () => {
+}
+
 export const diffElementNodes = (newVNode: VNode, oldVNode: VNode) => {
   const newProps = newVNode.props;
   const oldProps = oldVNode.props;
@@ -48,7 +51,9 @@ export const diffProps = (vnode: VNode, newProps: VNodeProps, oldProps: VNodePro
   }
 }
 
-export const diffChildren = (newVNode: VNode, oldVNode: VNode) => {
+export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
+  let oldChildren = oldParentVNode.children;
+  let oldChildrenLength = oldChildren!.length;
 }
 
 export const diff = (newVNode: VNode, oldVNode: VNode): ISnapshot[] => {
