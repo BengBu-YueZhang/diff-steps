@@ -7,6 +7,28 @@ const createEmptyObj = () => {
 }
 
 const appendChild = (parant: VNode, vnode: VNode) => {
+  let isNew = -1;
+  for (let i = 0; i < parant.children.length; i++) {
+    const childVNode = parant.children[i];
+    if (childVNode === vnode) {
+      isNew = i
+      break
+    }
+  }
+  if (isNew === -1) {
+    parant.children.push(vnode);
+    snapshots.push({
+      describe: `添加节点${vnode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
+  } else {
+    parant.children.splice(isNew, 1);
+    parant.children.push(vnode);
+    snapshots.push({
+      describe: `移动节点${vnode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
+  }
 }
 
 const insertBefore = () => {

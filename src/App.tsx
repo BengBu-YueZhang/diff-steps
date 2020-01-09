@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import h from './createElement';
-import { diff } from './diff';
+import { diff, snapshots } from './diff';
 import Tree from './components/Tree';
 import { simpleCloneDeepVNode } from './util';
 
@@ -42,7 +42,7 @@ const newVNode = h('div', {
 
 const App: React.FC = () => {
   const [ vnode, setVNode ] = useState(simpleCloneDeepVNode(oldVNode));
-  const snapshots = diff(newVNode, oldVNode);
+  diff(newVNode, oldVNode);
   console.log(`snapshots:`, snapshots)
   return (
     <div className="App">
