@@ -2,8 +2,12 @@ import { VNode, VNodeProps, LightType } from '../createElement';
 import { simpleCloneDeepVNode } from '../util';
 import { oldVNode as rootVNode } from '../App'; 
 
-const createEmptyObj = () => {
-  return {}
+const createEmptyVNode = (type: string) => {
+  return {
+    type,
+    props: {},
+    children: []
+  }
 }
 
 const appendChild = (parant: VNode, vnode: VNode) => {
@@ -39,7 +43,7 @@ const unmount = (parant: VNode, vnode: VNode) => {
     const childVNode = parant.children[i];
     if (
       childVNode === vnode &&
-      !(vnode as any).reuse
+      (vnode as any).reuse === false
     ) {
       vnode.light = LightType.DELETE;
       snapshots.push({
@@ -78,9 +82,8 @@ const setProperty = (vnode: VNode, key: string, value: any, oldValue?: any) => {
 }
 
 export const diffElementNodes = (newVNode: VNode, oldVNode: VNode): VNode => {
-  const EMPTY_OBJ = createEmptyObj();
   const newProps = newVNode.props;
-  const oldProps = oldVNode.props || EMPTY_OBJ;
+  const oldProps = oldVNode.props || {};
   diffProps(oldVNode, newProps, oldProps);
   diffChildren(newVNode, oldVNode);
   return oldVNode;
@@ -130,7 +133,7 @@ export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
           oldVNode = null;
         }
       }
-      const EMPTY_OBJ = createEmptyObj();
+      const EMPTY_OBJ = createEmptyVNode(childVNode.type);
       oldVNode = oldVNode || EMPTY_OBJ;
       let vnode = diff(childVNode, oldVNode as any);
       outer: if (vnode === EMPTY_OBJ) {
