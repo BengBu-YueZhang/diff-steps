@@ -47,11 +47,19 @@ const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => 
     }
   }
   if (reference === -1) {
-    appendChild(parant, newVNode)
+    parant.children.push(newVNode);
+    snapshots.push({
+      describe: `insertBefore, 添加节点${newVNode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
     return
   }
   if (isNew === -1) {
     parant.children.splice(reference, 0, newVNode)
+    snapshots.push({
+      describe: `insertBefore, 添加节点${newVNode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
   } else {
     parant.children.splice(reference, 0, newVNode);
     for (let i = 0; i < parant.children.length; i++) {
@@ -61,6 +69,10 @@ const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => 
         break;
       }
     }
+    snapshots.push({
+      describe: `insertBefore, 移动节点位置${newVNode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
   }
 }
 
