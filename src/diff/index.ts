@@ -89,19 +89,19 @@ const getNextBrother = (parant: VNode, vnode: VNode): VNode | null => {
   return null;
 }
 
-const unmount = (parant: VNode, vnode: VNode) => {
+const unmount = (parant: VNode) => {
   for (let i = 0; i < parant.children.length; i++) {
     const childVNode = parant.children[i];
     if (
-      childVNode === vnode &&
-      (vnode as any).reuse === false
+      (childVNode as any).reuse === false
     ) {
-      vnode.light = LightType.DELETE;
+      childVNode.light = LightType.DELETE;
       snapshots.push({
-        describe: `删除节点${vnode.type}`,
+        describe: `删除节点${childVNode.type}`,
         vnode: simpleCloneDeepVNode(rootVNode)
       });
       parant.children.splice(i, 1);
+      i--;
     }
   }
 }
@@ -196,27 +196,28 @@ export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
       const EMPTY_OBJ = createEmptyVNode();
       oldVNode = oldVNode || EMPTY_OBJ;
       let vnode = diff(childVNode, oldVNode as any);
-      outer: if (
-        firstOldVNode == null ||
-        vnode === EMPTY_OBJ as any
-      ) {
-        appendChild(oldParentVNode, vnode)
-      } else {
-        let sibVNode = firstOldVNode as any;
-        sibVNode = getNextBrother(oldParentVNode, sibVNode as any)
-        for (let j = 0; j < oldChildren.length && sibVNode; j+=2) {
-          if (sibVNode === vnode) {
-            break outer;
-          }
+      if (vnode != firstOldVNode) {
+        outer: if (
+          firstOldVNode == null ||
+          vnode === EMPTY_OBJ as any
+        ) {
+          appendChild(oldParentVNode, vnode)
+        } else {
+          let sibVNode = firstOldVNode as any;
           sibVNode = getNextBrother(oldParentVNode, sibVNode as any)
+          for (let j = 0; j < oldChildren.length && sibVNode; j+=2) {
+            if (sibVNode === vnode) {
+              break outer;
+            }
+            sibVNode = getNextBrother(oldParentVNode, sibVNode as any)
+          }
+          insertBefore(oldParentVNode, vnode, firstOldVNode)
         }
-        insertBefore(oldParentVNode, vnode, firstOldVNode)
       }
+      firstOldVNode = getNextBrother(oldParentVNode, vnode)
     }
   }
-  for (let i = 0; i < oldChildren.length; i++) {
-    unmount(oldParentVNode, oldChildren[i]);
-  }
+  unmount(oldParentVNode);
 }
 
 export const diff = (newVNode: VNode, oldVNode: VNode): VNode => {
