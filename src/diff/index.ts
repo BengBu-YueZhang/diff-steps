@@ -20,6 +20,7 @@ const appendChild = (parant: VNode, vnode: VNode) => {
   }
   if (isNew === -1) {
     parant.children.push(vnode);
+    vnode.light = LightType.ADD
     snapshots.push({
       describe: `appendChild, 添加节点${vnode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
@@ -27,6 +28,7 @@ const appendChild = (parant: VNode, vnode: VNode) => {
   } else {
     parant.children.splice(isNew, 1);
     parant.children.push(vnode);
+    vnode.light = LightType.CHANGE
     snapshots.push({
       describe: `appendChild, 移动节点位置${vnode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
@@ -48,6 +50,7 @@ const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => 
   }
   if (reference === -1) {
     parant.children.push(newVNode);
+    newVNode.light = LightType.ADD
     snapshots.push({
       describe: `insertBefore, 添加节点${newVNode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
@@ -56,6 +59,7 @@ const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => 
   }
   if (isNew === -1) {
     parant.children.splice(reference, 0, newVNode)
+    newVNode.light = LightType.ADD
     snapshots.push({
       describe: `insertBefore, 添加节点${newVNode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
@@ -69,6 +73,7 @@ const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => 
         break;
       }
     }
+    newVNode.light = LightType.CHANGE
     snapshots.push({
       describe: `insertBefore, 移动节点位置${newVNode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
@@ -115,7 +120,7 @@ export const snapshots:ISnapshot[] = []
 
 const setProperty = (vnode: VNode, key: string, value: any, oldValue?: any) => {
   if (value === null || value === false) {
-    vnode.light = LightType.DELETE;
+    vnode.light = LightType.CHANGE;
     snapshots.push({
       describe: `删除属性${key}`,
       vnode: simpleCloneDeepVNode(rootVNode)
