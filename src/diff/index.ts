@@ -21,23 +21,60 @@ const appendChild = (parant: VNode, vnode: VNode) => {
   if (isNew === -1) {
     parant.children.push(vnode);
     snapshots.push({
-      describe: `添加节点${vnode.type}`,
+      describe: `appendChild, 添加节点${vnode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
     });
   } else {
     parant.children.splice(isNew, 1);
     parant.children.push(vnode);
     snapshots.push({
-      describe: `移动节点${vnode.type}`,
+      describe: `appendChild, 移动节点位置${vnode.type}`,
       vnode: simpleCloneDeepVNode(rootVNode)
     });
   }
 }
 
-const insertBefore = () => {
+const insertBefore = (parant: VNode, newVNode: VNode, referenceVNode: VNode) => {
+  let isNew = -1;
+  let reference = -1
+  for (let i = 0; i < parant.children.length; i++) {
+    const childVNode = parant.children[i];
+    if (childVNode === newVNode) {
+      isNew = i
+    }
+    if (childVNode === referenceVNode) {
+      reference = i
+    }
+  }
+  if (reference === -1) {
+    appendChild(parant, newVNode)
+    return
+  }
+  if (isNew === -1) {
+    parant.children.splice(reference, 0, newVNode)
+  } else {
+    parant.children.splice(reference, 0, newVNode);
+    for (let i = 0; i < parant.children.length; i++) {
+      const childVNode = parant.children[i];
+      if (childVNode === newVNode && i !== reference) {
+        parant.children.splice(i, 1);
+        break;
+      }
+    }
+  }
 }
 
-const getNextBrother = () => {
+const getNextBrother = (parant: VNode, vnode: VNode): VNode | null => {
+  for (let i = 0; i < parant.children.length; i++) {
+    const childVNode = parant.children[i];
+    if (
+      childVNode === vnode &&
+      i < parant.children.length - 1
+    ) {
+      return parant.children[i + 1]
+    }
+  }
+  return null;
 }
 
 const unmount = (parant: VNode, vnode: VNode) => {
@@ -117,6 +154,7 @@ export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
   for (let i = 0; i < oldChildren.length; i++) {
     (oldChildren[i] as any).reuse = false
   }
+  let firstOldVNode = oldChildren.length ? oldChildren[0] : null
   for (let i = 0; i < newChildren.length; i++) {
     let childVNode = newChildren[i];
     let oldVNode;
@@ -147,11 +185,20 @@ export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
       oldVNode = oldVNode || EMPTY_OBJ;
       let vnode = diff(childVNode, oldVNode as any);
       outer: if (
+        firstOldVNode == null ||
         vnode === EMPTY_OBJ as any
       ) {
         appendChild(oldParentVNode, vnode)
       } else {
-        insertBefore()
+        let sibVNode = firstOldVNode as any;
+        sibVNode = getNextBrother(oldParentVNode, sibVNode as any)
+        for (let j = 0; j < oldChildren.length && sibVNode; j+=2) {
+          if (sibVNode === vnode) {
+            break outer;
+          }
+          sibVNode = getNextBrother(oldParentVNode, sibVNode as any)
+        }
+        insertBefore(oldParentVNode, vnode, firstOldVNode)
       }
     }
   }
