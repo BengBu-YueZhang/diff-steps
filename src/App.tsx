@@ -11,6 +11,12 @@ export const oldVNode = h('div', {
   h('ul', {
     class: 'list'
   }, [
+    h('li', { key: 1 }, []),
+    h('li', { key: 2 }, []),
+    h('li', { key: 3 }, []),
+    h('li', { key: 4 }, []),
+    h('li', { key: 5 }, []),
+    h('li', { key: 6 }, [])
   ])
 ])
 
@@ -20,6 +26,12 @@ const newVNode = h('div', {
   h('ul', {
     class: 'list'
   }, [
+    h('li', { key: 5 }, []),
+    h('li', { key: 6 }, []),
+    h('li', { key: 3 }, []),
+    h('li', { key: 4 }, []),
+    h('li', { key: 1 }, []),
+    h('li', { key: 2 }, [])
   ])
 ])
 
