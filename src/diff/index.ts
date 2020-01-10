@@ -2,9 +2,8 @@ import { VNode, VNodeProps, LightType } from '../createElement';
 import { simpleCloneDeepVNode } from '../util';
 import { oldVNode as rootVNode } from '../App'; 
 
-const createEmptyVNode = (type: string) => {
+const createEmptyVNode = () => {
   return {
-    type,
     props: {},
     children: []
   }
@@ -36,6 +35,9 @@ const appendChild = (parant: VNode, vnode: VNode) => {
 }
 
 const insertBefore = () => {
+}
+
+const getNextBrother = () => {
 }
 
 const unmount = (parant: VNode, vnode: VNode) => {
@@ -75,7 +77,7 @@ const setProperty = (vnode: VNode, key: string, value: any, oldValue?: any) => {
     vnode.props[key] = value;
     vnode.light = LightType.CHANGE;
     snapshots.push({
-      describe: `修改属性${key}, 由${oldValue}到${value}`,
+      describe: `${oldValue == undefined ? '添加属性' : '修改属性'}${key}, 由${oldValue}到${value}`,
       vnode: simpleCloneDeepVNode(rootVNode)
     });
   }
@@ -84,6 +86,13 @@ const setProperty = (vnode: VNode, key: string, value: any, oldValue?: any) => {
 export const diffElementNodes = (newVNode: VNode, oldVNode: VNode): VNode => {
   const newProps = newVNode.props;
   const oldProps = oldVNode.props || {};
+  if (oldVNode.type == undefined) {
+    oldVNode.type = newVNode.type;
+    snapshots.push({
+      describe: `创建节点${newVNode.type}`,
+      vnode: simpleCloneDeepVNode(rootVNode)
+    });
+  }
   diffProps(oldVNode, newProps, oldProps);
   diffChildren(newVNode, oldVNode);
   return oldVNode;
@@ -125,20 +134,24 @@ export const diffChildren = (newParentVNode: VNode, oldParentVNode: VNode) => {
           if (
             oldVNode &&
             oldVNode.props.key === childVNode.props.key &&
-            oldVNode.type === childVNode.type
+            oldVNode.type === childVNode.type &&
+            !(oldVNode as any).reuse
           ) {
-            (oldChildren[i] as any).reuse = true
+            (oldChildren[j] as any).reuse = true
             break
           }
           oldVNode = null;
         }
       }
-      const EMPTY_OBJ = createEmptyVNode(childVNode.type);
+      const EMPTY_OBJ = createEmptyVNode();
       oldVNode = oldVNode || EMPTY_OBJ;
       let vnode = diff(childVNode, oldVNode as any);
-      outer: if (vnode === EMPTY_OBJ) {
+      outer: if (
+        vnode === EMPTY_OBJ as any
+      ) {
         appendChild(oldParentVNode, vnode)
       } else {
+        insertBefore()
       }
     }
   }
