@@ -4,10 +4,11 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() =>
   createStyles({
     title: {
-      fontSize: `28px`,
+      fontSize: `33px`,
       lineHeight: 1.4,
       color: `#000`,
-      marginTop: `60px`
+      marginTop: `40px`,
+      marginBottom: `10px`
     },
   }),
 );

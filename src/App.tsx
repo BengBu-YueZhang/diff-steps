@@ -8,6 +8,16 @@ import Main from './components/Main';
 import Title from './components/Title';
 import Describe from './components/Describe';
 import Tree from './components/Tree';
+import Button from '@material-ui/core/Button';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    button: {
+      margin: `40px 0`
+    }
+  }),
+);
 
 // <div class="root">
 //  <nav class="nav">
@@ -89,18 +99,21 @@ const fixedNewVNode = simpleCloneDeepVNode(newVNode);
 let snapshotIndex = 0
 
 const App: React.FC = () => {
-  // const [ vnode, setVNode ] = useState(simpleCloneDeepVNode(oldVNode));
-  // const [ describe, setDescribe ] = useState('');
+  const [ vnode, setVNode ] = useState(simpleCloneDeepVNode(oldVNode));
+  const [ describe, setDescribe ] = useState('');
+  const classes = useStyles();
 
-  // diff(newVNode, oldVNode);
+  diff(newVNode, oldVNode);
 
-  // const handleNextSnapshot = () => {
-  //   if (snapshotIndex >= snapshots.length) return
-  //   const { describe, vnode } = snapshots[snapshotIndex]
-  //   setDescribe(describe);
-  //   setVNode(vnode)
-  //   snapshotIndex += 1
-  // }
+  const handleNextSnapshot = () => {
+    if (snapshotIndex >= snapshots.length) {
+      return setDescribe('')
+    }
+    const { describe, vnode } = snapshots[snapshotIndex]
+    setDescribe(describe);
+    setVNode(vnode)
+    snapshotIndex += 1
+  }
 
   return (
     <div className="App">
@@ -118,16 +131,20 @@ const App: React.FC = () => {
         </Describe>
         <Title>旧节点</Title>
         <img src="https://i.loli.net/2020/01/11/53NCti9PXRSQ6VY.png"/>
-        <Tree data={fixedOldVNode}/>
         <Title>新节点</Title>
         <img src="https://i.loli.net/2020/01/11/B94ixrqkUNDAY2u.png"/>
-        <Tree data={fixedNewVNode} />
         <Title>Steps</Title>
-        <Title>Key 最大的意义</Title>
-        <Title>Todo</Title>
-        {/* <Tree data={vnode} />
-        <button onClick={handleNextSnapshot}>next</button>
-        <p>{ describe }</p> */}
+        <Button
+          onClick={handleNextSnapshot}
+          size="large"
+          variant="contained"
+          color="primary"
+          disableElevation
+          className={classes.button}
+        >
+          下 一 步 { describe ? `（${describe}）` : '' }
+        </Button>
+        <Tree data={vnode}/>
       </Main>
     </div>
   );
