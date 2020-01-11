@@ -5,10 +5,7 @@ export type VNodeChildren = VNode[];
 export type VNodeProps = Data;
 
 export enum LightType {
-  ADD = '#4baf50',
-  CHANGE = '#2196f3',
-  DELETE = '#f44335',
-  DEFAULT = '#fe4081'
+  DEFAULT = '#3e51b5'
 }
 
 export interface Data {

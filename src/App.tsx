@@ -14,7 +14,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() =>
   createStyles({
     button: {
-      margin: `40px 0`
+      margin: `30px 0`
     }
   }),
 );
@@ -52,8 +52,6 @@ export const oldVNode = h('div', {
     h('li', { key: '5' }, [])
   ])
 ]);
-
-const fixedOldVNode = simpleCloneDeepVNode(oldVNode);
 
 // <div class="root">
 //  <nav class="nav">
@@ -94,8 +92,6 @@ const newVNode = h('div', {
   ])
 ])
 
-const fixedNewVNode = simpleCloneDeepVNode(newVNode);
-
 let snapshotIndex = 0
 
 const App: React.FC = () => {
@@ -107,7 +103,7 @@ const App: React.FC = () => {
 
   const handleNextSnapshot = () => {
     if (snapshotIndex >= snapshots.length) {
-      return setDescribe('')
+      return setDescribe('完成')
     }
     const { describe, vnode } = snapshots[snapshotIndex]
     setDescribe(describe);
@@ -124,8 +120,9 @@ const App: React.FC = () => {
           DiffSteps，是一个将diff算法的更新过程，拆解为可逐步展示的小工具。
         </Describe>
         <Describe>
-          事情的起因是这样的。之前12月参加了一场面试。面试官问我，当一个由数组的渲染的列表，当数组的首尾颠倒，真实DOM是如何变化的？我当时回答的不是特别好，所以后来专门上网研究了一下。
+          事情的起因是这样的。之前12月参加了一场面试。面试官问我，当一个由数组的渲染的列表，当数组的首尾颠倒，DOM是如何变化的？
         </Describe>
+        <Describe>我当时回答的不是特别好，所以后来专门上网研究了一下。</Describe>
         <Describe>
           网上有许多介绍diff算法的文章，但是一大坨文字配上大量源码，让人实在没有看下去的欲望。于是乎，我做了这个小工具，希望大家可以轻松了解Diff更新的过程。
         </Describe>
@@ -133,7 +130,7 @@ const App: React.FC = () => {
         <img src="https://i.loli.net/2020/01/11/53NCti9PXRSQ6VY.png"/>
         <Title>新节点</Title>
         <img src="https://i.loli.net/2020/01/11/B94ixrqkUNDAY2u.png"/>
-        <Title>Steps</Title>
+        <Title>变化过程</Title>
         <Button
           onClick={handleNextSnapshot}
           size="large"
@@ -142,8 +139,9 @@ const App: React.FC = () => {
           disableElevation
           className={classes.button}
         >
-          下 一 步 { describe ? `（${describe}）` : '' }
+          下 一 步
         </Button>
+        { describe ? `（${describe}）` : '' }
         <Tree data={vnode}/>
       </Main>
     </div>

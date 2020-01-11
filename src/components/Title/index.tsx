@@ -7,7 +7,7 @@ const useStyles = makeStyles(() =>
       fontSize: `33px`,
       lineHeight: 1.4,
       color: `#000`,
-      marginTop: `40px`,
+      marginTop: `30px`,
       marginBottom: `10px`
     },
   }),
